@@ -3,14 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { Route, Routes } from 'react-router';
 import { Container } from 'reactstrap';
 
-import LoginContainer from './containers/LoginContainer';
-import AppointmentContainer from './containers/AppointmentContainer';
 import {AuthService} from './services';
+import {WarningContainer, CustomerContainer, LoginContainer, DepartmentContainer, EmployeeContainer, AppointmentContainer} from './containers';
 
 function App() {
 
-  const [isRender, setIsRender] = useState(true)
-  const [isNotLogged, setIsNotLogged] = useState(false)
+  const [isRender, setIsRender] = useState(false)
 
   useEffect(() => {
     async function checkRole(){
@@ -21,17 +19,11 @@ function App() {
 
   const getCurrentUser = async () => {
     var token = AuthService.getCookie("Token")
-    if (token === undefined){
-      if (window.location.href.endsWith("/login") == false){
-        window.location.replace("http://localhost:3000/login")
-      }
+    if (token == undefined){
+      setIsRender(false)
     }
     else{
-      var role = await AuthService.getRole()
-      alert(role.role)
-      if (role.role != "Doctor"){
-        setIsRender(false)
-      }
+      setIsRender(true)
     }
   }
 
@@ -40,8 +32,11 @@ function App() {
       <div>
         <Container>
           <Routes>
-            <Route path='/login'  element={LoginContainer()}/>
-            <Route path='/' element={AppointmentContainer()}/>
+            <Route path='/login'  element={<LoginContainer />}/>
+            <Route path='/customer' element={<CustomerContainer/>}/>
+            <Route path='/department' element={<DepartmentContainer/>}/>
+            <Route path='/employee' element={<EmployeeContainer/>}/>
+            <Route path='/' element={<AppointmentContainer/>}/>
           </Routes>
         </Container>
       </div>
@@ -52,7 +47,8 @@ function App() {
       <div>
         <Container>
           <Routes>
-            <Route path='/' element={AppointmentContainer()}/>
+            <Route path='/' element={<WarningContainer />}/>
+            <Route path='/login'  element={<LoginContainer />}/>
           </Routes>
         </Container>
       </div>

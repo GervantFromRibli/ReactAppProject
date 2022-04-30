@@ -19,8 +19,7 @@ export default function LoginContainer() {
         }
         else {
             AuthService.setCookie("Token", token.response)
-            alert(token.response)
-            window.location.replace("http://localhost:3000/")
+            window.location.assign("http://localhost:3000/")
         }
     }
 

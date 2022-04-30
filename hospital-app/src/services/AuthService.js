@@ -13,7 +13,7 @@ class AuthService {
         return await fetch(`${configData.DjangoLoginAPI}/` + this.getCookie('Token'), requestOptions)
             .then(response => {
                 if (response.status == 403) {
-                    window.location.replace("http://localhost:3000/login");
+                    return undefined;
                 }
                 else {
                     return response.json();
