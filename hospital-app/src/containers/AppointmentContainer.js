@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 import {AppointmentService, AuthService} from './../services';
 
@@ -16,6 +17,8 @@ export default function AppointmentContainer() {
     const [role, setRole] = useState('');
     const [pageNumb, setPage] = useState(1);
     const [isNotLastPage, setIsNotLastPage] = useState(true)
+    const client = new W3CWebSocket("ws://localhost:3001/ws")
+    const [wsUpdate, setWsUpdate] = useState(0)
 
     useEffect(() => {
         async function getAppointments() {
@@ -25,6 +28,8 @@ export default function AppointmentContainer() {
             setRole(role.role)
         }
         getAppointments();
+
+        setClient()
     }, []);
 
     useEffect(() => {
@@ -32,7 +37,21 @@ export default function AppointmentContainer() {
             await getListOfAppointments();
         }
         getAppointments();
-    }, [pageNumb])
+
+    }, [pageNumb, wsUpdate])
+
+    const setClient = () => {
+        client.onopen = () => {
+            console.log("Open")
+        }
+
+        client.onmessage = (message) => {
+            if (message.data.toString() == "UpdateAppointment"){
+                setPage(1)
+                setWsUpdate(Date.now())
+            }
+        }
+    }
 
     const getListOfAppointments = async () => {
 
@@ -55,7 +74,8 @@ export default function AppointmentContainer() {
         setCustomer(appointment.customer)
     }
 
-    const SaveData = async () => {
+    const SaveData = async e => {
+        e.preventDefault();
         if (id == 0){
             let appointment = {
                 date: date,
@@ -87,13 +107,18 @@ export default function AppointmentContainer() {
 
             await AppointmentService.put(id, data)
         }
-        await getListOfAppointments()
+
+        client.send(JSON.stringify({
+            message: "UpdateAppointment"
+        }))
     }
 
     const DeleteAppointment = async (id) => {
         let result = await AppointmentService.delete(id)
         if (result.success != undefined){
-            setPage(1)
+            client.send(JSON.stringify({
+                message: "UpdateAppointment"
+            }))
         }
     }
 

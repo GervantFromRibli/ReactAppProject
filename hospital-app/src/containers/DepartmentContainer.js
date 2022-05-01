@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 import {DepartmentService, AuthService} from './../services';
 
@@ -9,6 +10,8 @@ export default function DepartmentContainer() {
     const [name, setName] = useState('');
     const [address, setAddress] = useState('');
     const [role, setRole] = useState('')
+    const client = new W3CWebSocket("ws://localhost:3001/ws")
+    const [wsUpdate, setWsUpdate] = useState(0)
 
     useEffect(() => {
         async function getDepartments() {
@@ -18,7 +21,16 @@ export default function DepartmentContainer() {
             setRole(role.role)
         }
         getDepartments();
+
+        setClient()
     }, []);
+
+    useEffect(() => {
+        async function getDepartments() {
+            await getListOfDepartments();
+        }
+        getDepartments();
+    }, [wsUpdate]);
 
     const getListOfDepartments = async () => {
 
@@ -27,13 +39,26 @@ export default function DepartmentContainer() {
         setDepartments(data)
     };
 
+    const setClient = () => {
+        client.onopen = () => {
+            console.log("Open")
+        }
+
+        client.onmessage = (message) => {
+            if (message.data.toString() == "UpdateDepartment"){
+                setWsUpdate(Date.now())
+            }
+        }
+    }
+
     const ChangeDepartment = (department) => {
         setId(department.id)
         setName(department.name)
         setAddress(department.address)
     }
 
-    const SaveData = async () => {
+    const SaveData = async e => {
+        e.preventDefault()
         if (id == 0){
             let department = {
                 name: name,
@@ -59,12 +84,17 @@ export default function DepartmentContainer() {
 
             await DepartmentService.put(id, data)
         }
-        await getListOfDepartments()
+
+        client.send(JSON.stringify({
+            message: "UpdateDepartment"
+        }))
     }
 
     const DeleteDepartment = async (id) => {
         await DepartmentService.delete(id)
-        await getListOfDepartments()
+        client.send(JSON.stringify({
+            message: "UpdateDepartment"
+        }))
     }
 
     const reset = () =>{

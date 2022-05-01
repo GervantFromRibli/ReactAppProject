@@ -48,7 +48,6 @@ class AuthService {
     }
 
     setCookie(name, value){
-        console.log(name)
         const cookies = new Cookies();
         cookies.set(name, value);
     }

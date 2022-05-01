@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 import {CustomerService, AuthService} from './../services';
 
@@ -13,6 +14,8 @@ export default function CustomerContainer() {
     const [pageNumb, setPage] = useState(1);
     const [isNotLastPage, setIsNotLastPage] = useState(true)
     const [role, setRole] = useState('')
+    const client = new W3CWebSocket("ws://localhost:3001/ws")
+    const [wsUpdate, setWsUpdate] = useState(0)
 
     useEffect(() => {
         async function getCustomers() {
@@ -22,6 +25,8 @@ export default function CustomerContainer() {
             setRole(role.role)
         }
         getCustomers();
+
+        setClient()
     }, []);
 
     useEffect(() => {
@@ -29,7 +34,20 @@ export default function CustomerContainer() {
             await getListOfCustomers();
         }
         getCustomers();
-    }, [pageNumb])
+    }, [pageNumb, wsUpdate])
+
+    const setClient = () => {
+        client.onopen = () => {
+            console.log("Open")
+        }
+
+        client.onmessage = (message) => {
+            if (message.data.toString() == "UpdateCustomer"){
+                setPage(1)
+                setWsUpdate(Date.now())
+            }
+        }
+    }
 
     const getListOfCustomers = async () => {
 
@@ -47,7 +65,8 @@ export default function CustomerContainer() {
         setAddress(customer.address)
     }
 
-    const SaveData = async () => {
+    const SaveData = async e => {
+        e.preventDefault()
         if (id == 0){
             let customer = {
                 name: name,
@@ -77,13 +96,18 @@ export default function CustomerContainer() {
 
             await CustomerService.put(id, data)
         }
-        await getListOfCustomers()
+        
+        client.send(JSON.stringify({
+            message: "UpdateCustomer"
+        }))
     }
 
     const DeleteCustomer = async (id) => {
         let result = await CustomerService.delete(id)
         if (result.success != undefined){
-            setPage(1)
+            client.send(JSON.stringify({
+                message: "UpdateCustomer"
+            }))
         }
     }
 

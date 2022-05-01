@@ -7,13 +7,15 @@ export default function LoginContainer() {
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
 
-    const login = async () => {
+    const login = async (e) => {
+        e.preventDefault();
         var loginData = {
             username,
             password
         }
 
         var token = await AuthService.login(loginData);
+        alert(token.response)
         if (token === null){
             alert("No such user");
         }
@@ -38,7 +40,7 @@ export default function LoginContainer() {
                 </div>
                 <hr />
                 <div>
-                    <input type="submit" value="Log in" id="acceptData" />
+                    <input type={'submit'} value="Log in" id="acceptData" />
                 </div>
             </div>
         </form>

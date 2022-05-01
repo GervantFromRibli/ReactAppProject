@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 import {EmployeeService, AuthService} from './../services';
 
@@ -15,6 +16,8 @@ export default function EmployeeContainer() {
     const [password, setPassword] = useState('');
     const [department, setDepartment] = useState(0);
     const [role, setRole] = useState('');
+    const client = new W3CWebSocket("ws://localhost:3001/ws")
+    const [wsUpdate, setWsUpdate] = useState(0)
 
     useEffect(() => {
         async function getEmployees() {
@@ -24,7 +27,28 @@ export default function EmployeeContainer() {
             setRole(role.role)
         }
         getEmployees();
+
+        setClient()
     }, []);
+
+    useEffect(() => {
+        async function getEmployees() {
+            await getListOfEmployees();
+        }
+        getEmployees();
+    }, [wsUpdate]);
+
+    const setClient = () => {
+        client.onopen = () => {
+            console.log("Open")
+        }
+
+        client.onmessage = (message) => {
+            if (message.data.toString() == "UpdateEmployee"){
+                setWsUpdate(Date.now())
+            }
+        }
+    }
 
     const getListOfEmployees = async () => {
 
@@ -46,7 +70,8 @@ export default function EmployeeContainer() {
         setDepartment(employee.department)
     }
 
-    const SaveData = async () => {
+    const SaveData = async e => {
+        e.preventDefault()
         if (id == 0){
             let employee = {
                 name: name,
@@ -82,12 +107,17 @@ export default function EmployeeContainer() {
 
             await EmployeeService.put(id, data)
         }
-        await getListOfEmployees()
+        
+        client.send(JSON.stringify({
+            message: "UpdateEmployee"
+        }))
     }
 
     const DeleteEmployee = async (id) => {
         await EmployeeService.delete(id)
-        await getListOfEmployees()
+        client.send(JSON.stringify({
+            message: "UpdateEmployee"
+        }))
     }
 
     const reset = () =>{
