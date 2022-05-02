@@ -1,0 +1,7 @@
+{
+    "DjangoLoginAPI": "http://localhost:8000/api/login",
+    "DjangoAppointmentAPI": "http://localhost:8000/api/appointment",
+    "DjangoCustomerAPI": "http://localhost:8000/api/customer",
+    "DjangoDepartmentAPI": "http://localhost:8000/api/department",
+    "DjangoEmployeeAPI": "http://localhost:8000/api/employee"
+  }
