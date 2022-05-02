@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
+import { elementBaseStyle, tableBordRadius, inputRadius, mainDiv } from "./../components/Styles"
 
 import {AppointmentService, AuthService} from './../services';
 
@@ -133,43 +134,43 @@ export default function AppointmentContainer() {
 
     return (
         <div>
-            <h2 style={{marginLeft: 15, marginTop: 15}}>List of departments</h2>
+            <h2 style={elementBaseStyle}>List of departments</h2>
             <form id="appointmentForm" onSubmit={SaveData} style={{display: role != "Doctor" ? 'initial' : 'none'}}>
-                <table border={0}>
+                <table border={1} style={{...tableBordRadius, ...elementBaseStyle}}>
                     <tbody>
                         <tr>
-                            <td>
-                                <div style={{marginLeft: 15}}>
+                            <td style={tableBordRadius}>
+                                <div style={mainDiv}>
                                     <label htmlFor="date">Date:</label>
-                                    <input type={'date'} className="form-control" name='date' value={date} onChange={e => {setDate(e.target.value)}}/>
+                                    <input type={'date'} style={inputRadius} name='date' value={date} onChange={e => {setDate(e.target.value)}}/>
                                 </div>
                             </td>
-                            <td>
-                                <div style={{marginLeft: 15}}>
+                            <td style={tableBordRadius}>
+                                <div style={mainDiv}>
                                     <label htmlFor="startTime">Start of appointment:</label>
-                                    <input type={'time'} className="form-control" name='startTime' value={startTime} onChange={e => {setStartTime(e.target.value)}}/>
+                                    <input type={'time'} style={inputRadius} name='startTime' value={startTime} onChange={e => {setStartTime(e.target.value)}}/>
                                 </div>
                             </td>
-                            <td>
-                                <div style={{marginLeft: 15}}>
+                            <td style={tableBordRadius}>
+                                <div style={mainDiv}>
                                     <label htmlFor="endTime">End of appointment:</label>
-                                    <input type={'time'} className="form-control" name='endTime' value={endTime} onChange={e => {setEndTime(e.target.value)}}/>
+                                    <input type={'time'} style={inputRadius} name='endTime' value={endTime} onChange={e => {setEndTime(e.target.value)}}/>
                                 </div>
                             </td>
-                            <td>
-                                <div style={{marginLeft: 15}}>
+                            <td style={tableBordRadius}>
+                                <div style={mainDiv}>
                                     <label htmlFor="customer">Customer id:</label>
-                                    <select name="customer" onChange={e => { setCustomer(e.target.value) }} value={customer}>
+                                    <select name="customer" style={inputRadius} onChange={e => { setCustomer(e.target.value) }} value={customer}>
                                         {customerIds.map((element) =>
                                             <option key={element} value={element}>{element}</option>)
                                         }
                                     </select>
                                 </div>
                             </td>
-                            <td>
-                                <div style={{marginLeft: 15}}>
+                            <td style={tableBordRadius}>
+                                <div style={mainDiv}>
                                     <label htmlFor="employeeSet">Employee Id:</label>
-                                    <select name="employeeSet" onChange={e => { setEmployee(e.target.value) }} value={employee}>
+                                    <select name="employeeSet" style={inputRadius} onChange={e => { setEmployee(e.target.value) }} value={employee}>
                                         {employeeIds.map((element) =>
                                             <option key={element} value={element}>{element}</option>)
                                         }
@@ -179,12 +180,12 @@ export default function AppointmentContainer() {
                         </tr>
                     </tbody>
                 </table>
-                <div style={{marginLeft: 15, marginTop: 15}}>
-                    <button id="submit" className="btn btn-primary" type={'submit'}>Save</button>
-                    <a id="reset" className="btn btn-primary" onClick={reset}>Reset</a>
+                <div style={elementBaseStyle}>
+                    <button id="submit" type={'submit'}>Save</button>
+                    <button id="reset" onClick={reset}>Reset</button>
                 </div>
             </form>
-            <table className="table table-condensed table-striped  col-md-6">
+            <table border={1} style={elementBaseStyle}>
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -225,8 +226,10 @@ export default function AppointmentContainer() {
                     )}
                 </tbody>
             </table>
-            <button onClick={_ => {setPage(pageNumb + 1)}} style={{display: isNotLastPage ? 'initial' : 'none' }}>Next</button>
-            <button onClick={_ => {setPage(pageNumb - 1)}} style={{display: pageNumb > 1 ? 'initial' : 'none'}}>Previous</button>
+            <div style={elementBaseStyle}>
+                <button onClick={_ => {setPage(pageNumb + 1)}} style={{display: isNotLastPage ? 'initial' : 'none' }}>Next</button>
+                <button onClick={_ => {setPage(pageNumb - 1)}} style={{display: pageNumb > 1 ? 'initial' : 'none'}}>Previous</button>
+            </div>
         </div>
     )
 }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import {AuthService} from './../services';
+import { loginForm, loginButton } from '../components/Styles';
 
 export default function LoginContainer() {
 
@@ -15,7 +16,6 @@ export default function LoginContainer() {
         }
 
         var token = await AuthService.login(loginData);
-        alert(token.response)
         if (token === null){
             alert("No such user");
         }
@@ -26,12 +26,12 @@ export default function LoginContainer() {
     }
 
     return (
-        <form onSubmit={login}>
+        <form onSubmit={login} style={loginForm}>
             <div className="text-center">
                 <h2>Login form</h2>
                 <hr />
                 <div id="username">
-                    <label className="control-label">User`s name`: </label><br />
+                    <label className="control-label">User`s name: </label><br />
                     <input id="userName" name="userName" value={username} onChange={e => { setUserName(e.target.value) }} />
                 </div>
                 <div id="password">
@@ -39,7 +39,7 @@ export default function LoginContainer() {
                     <input id="passWord" name="passWord" value={password} onChange={e => { setPassword(e.target.value) }} />
                 </div>
                 <hr />
-                <div>
+                <div style={loginButton}>
                     <input type={'submit'} value="Log in" id="acceptData" />
                 </div>
             </div>

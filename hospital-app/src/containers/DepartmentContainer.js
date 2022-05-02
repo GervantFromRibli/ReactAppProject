@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
+import { elementBaseStyle, tableBordRadius, inputRadius, mainDiv } from "./../components/Styles"
 
 import {DepartmentService, AuthService} from './../services';
 
@@ -105,32 +106,32 @@ export default function DepartmentContainer() {
 
     return (
         <div>
-            <h2 style={{marginLeft: 15, marginTop: 15}}>List of departments</h2>
+            <h2 style={elementBaseStyle}>List of departments</h2>
             <form id="departmentForm" onSubmit={SaveData} style={{display: role == "Admin" ? 'initial' : 'none'}}>
-                <table border={0}>
+                <table border={1} style={{...tableBordRadius, ...elementBaseStyle}}>
                     <tbody>
                         <tr>
-                            <td>
-                                <div style={{marginLeft: 15}}>
+                            <td style={tableBordRadius}>
+                                <div style={mainDiv}>
                                     <label htmlFor="name">Name:</label>
-                                    <input type={"text"} className="form-control" name='name' value={name} minLength={1} maxLength={50} onChange={e => {setName(e.target.value)}}/>
+                                    <input type={"text"} style={inputRadius} name='name' value={name} minLength={1} maxLength={50} onChange={e => {setName(e.target.value)}}/>
                                 </div>
                             </td>
-                            <td>
-                                <div style={{marginLeft: 15}}>
+                            <td style={tableBordRadius}>
+                                <div style={mainDiv}>
                                     <label htmlFor="address">Address:</label>
-                                    <input type={"text"} className="form-control" name='address' value={address} minLength={1} maxLength={100} onChange={e => {setAddress(e.target.value)}}/>
+                                    <input type={"text"} style={inputRadius} name='address' value={address} minLength={1} maxLength={100} onChange={e => {setAddress(e.target.value)}}/>
                                 </div>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                <div style={{marginLeft: 15, marginTop: 15}}>
-                    <button id="submit" className="btn btn-primary" type={'submit'}>Save</button>
-                    <a id="reset" className="btn btn-primary" onClick={reset}>Reset</a>
+                <div style={elementBaseStyle}>
+                    <button id="submit" type={'submit'}>Save</button>
+                    <button id="reset" onClick={reset}>Reset</button>
                 </div>
             </form>
-            <table className="table table-condensed table-striped  col-md-6">
+            <table border={1} style={elementBaseStyle}>
                 <thead>
                     <tr>
                         <th>Id</th>

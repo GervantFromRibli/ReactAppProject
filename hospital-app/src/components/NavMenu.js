@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import './NavMenu.css';
+import { Container } from 'reactstrap';
 import { AuthService } from "./../services";
+import { headerStyle, childDiv, firstChild, parentDiv, linkStyle } from './Styles';
 
 export function NavMenu() {
 
@@ -25,35 +24,30 @@ export function NavMenu() {
         window.location.assign("http://localhost:3000/login");
     }
 
-    const RenderLinks = () => {
-        return (
-            <ul>
-                <NavItem>
-                    <NavLink tag={Link} to="/">Appointment` Catalog</NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink tag={Link}to="/customer">Customers` Catalog</NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink tag={Link} to="/department">Departments` Catalog</NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink tag={Link} to="/employee">Employees` Catalog</NavLink>
-                </NavItem>
-            </ul>);
-    }
-
     if (isRender){
         return (
-            <header>
-                <Navbar className="box-shadow" light>
+            <header style={headerStyle}>
+                <nav>
                     <Container>
-                        <NavbarBrand onClick={ReturnToLogin}>{currentUser}</NavbarBrand>
-                        <Collapse navbar>
-                            <RenderLinks />
-                        </Collapse>
+                        <div style={parentDiv}>
+                            <div style={{...childDiv, ...firstChild}}>
+                                <a onClick={ReturnToLogin}>{currentUser}</a>
+                            </div>
+                            <div style={childDiv}>
+                                <a href="/" style={linkStyle}>Appointment` Catalog</a>
+                            </div>
+                            <div style={childDiv}>
+                                <a href="/customer" style={linkStyle}>Customers` Catalog</a>
+                            </div>
+                            <div style={childDiv}>
+                                <a href="/department" style={linkStyle}>Departments` Catalog</a>
+                            </div>
+                            <div style={childDiv}>
+                                <a href="/employee" style={linkStyle}>Employees` Catalog</a>
+                            </div>
+                        </div>
                     </Container>
-                </Navbar>
+                </nav>
             </header>
         );
     }
