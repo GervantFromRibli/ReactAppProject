@@ -2,6 +2,7 @@ import './App.css';
 import React, { useState, useEffect } from 'react';
 import { Route, Routes } from 'react-router';
 import { Container } from 'reactstrap';
+import { Layout } from './components/Layout';
 
 import {AuthService} from './services';
 import {WarningContainer, CustomerContainer, LoginContainer, DepartmentContainer, EmployeeContainer, AppointmentContainer} from './containers';
@@ -30,15 +31,15 @@ function App() {
   if (isRender){
     return (
       <div>
-        <Container>
+        <Layout>
           <Routes>
-            <Route path='/login'  element={<LoginContainer />}/>
             <Route path='/customer' element={<CustomerContainer/>}/>
             <Route path='/department' element={<DepartmentContainer/>}/>
             <Route path='/employee' element={<EmployeeContainer/>}/>
             <Route path='/' element={<AppointmentContainer/>}/>
+            <Route path='/login'  element={<LoginContainer />}/>
           </Routes>
-        </Container>
+        </Layout>
       </div>
     );
   }
